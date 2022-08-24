@@ -29,8 +29,6 @@ export PATH=$PATH:~/go/bin
 
 alias ls="ls --color"
 alias ll="ls -al"
-alias nvim="~/.local/bin/nvim"
-alias docker=podman
 alias cd="cd_with_venv_check"
 
 export GIT_PS1_SHOWCOLORHINTS=true
