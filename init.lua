@@ -34,6 +34,7 @@ require('packer').startup(function()
 	use 'tpope/vim-sleuth'
 	use 'leafgarland/typescript-vim'
 	use 'pangloss/vim-javascript'
+	use 'RRethy/nvim-base16'
 end)
 
 vim.g.mapleader = ' '
@@ -48,11 +49,11 @@ vim.opt.hlsearch = false
 vim.opt.wrap = false
 
 -- Colorscheme
-vim.opt.background = 'light'
-vim.cmd('colorscheme solarized')
+vim.cmd('let base16colorspace=256')
+vim.cmd('colorscheme base16-tomorrow')
 
 -- Statusline
-require('lualine').setup()
+require('lualine').setup({ options = { theme = 'base16' }})
 
 -- Lsp Init
 local lsp = require'lspconfig'
@@ -98,6 +99,11 @@ cmp.setup.cmdline(':', {
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
+local on_attach = function(client, bufnr)
+	local bufopts = { noremap=true, silent=true, buffer=bufnr }
+	vim.keymap.set('n', '<leader>i', vim.lsp.buf.hover, bufopts)
+end
+
 -- Telescope config
 require('telescope').setup({
 	defaults = {
@@ -120,16 +126,18 @@ lsp.tsserver.setup{
 	on_attach = function(client, buffer)
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
-		vim.api.nvim_buf_set_keymap(buffer, 'n', '<leader>i', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true })
+		on_attach()
 	end
 }
 -- Gopls
 lsp.gopls.setup{
+	on_attach = on_attach,
 	capabilities = capabilities
 }
 -- Pylsp
 lsp.pylsp.setup{
 	capabilities = capabilities,
+	on_attach = on_attach,
 	settings = {
 		pylsp = {
 			plugins = {
@@ -140,6 +148,12 @@ lsp.pylsp.setup{
 			}
 		}
 	}
+}
+
+-- Rust
+lsp.rust_analyzer.setup{
+	capabilities = capabilities,
+	on_attach = on_attach
 }
 
 -- Global Binds
