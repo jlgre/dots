@@ -38,7 +38,6 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 
 #PS1='[$?][\u@\h \w]$(__git_ps1)$ '
 PS1='[$?] \u:\w$(__git_ps1)$ '
-
 cd_with_venv_check() {
 	builtin cd ${1:+"$@"}
 	activate_venv
@@ -55,3 +54,11 @@ export NVM_DIR="$HOME/.nvm"
 export EDITOR=nvim
 
 [ -f ~/.custom.sh ] && source ~/.custom.sh
+
+BASE16_SHELL="$HOME/.config/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        source "$BASE16_SHELL/profile_helper.sh"
+        
+base16_tomorrow
+. "$HOME/.cargo/env"
