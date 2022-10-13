@@ -35,6 +35,7 @@ require('packer').startup(function()
 	use 'leafgarland/typescript-vim'
 	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
+	use 'NicholasDunham/chuck.nvim'
 end)
 
 vim.g.mapleader = ' '
@@ -140,7 +141,25 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 local on_attach = function(client, bufnr)
 	local bufopts = { noremap=true, silent=true, buffer=bufnr }
 	vim.keymap.set('n', '<leader>i', vim.lsp.buf.hover, bufopts)
+	vim.keymap.set('n', '<leader>d', vim.lsp.buf.type_definition, bufopts)
 end
+
+local border = {
+      {"🭽", "FloatBorder"},
+      {"▔", "FloatBorder"},
+      {"🭾", "FloatBorder"},
+      {"▕", "FloatBorder"},
+      {"🭿", "FloatBorder"},
+      {"▁", "FloatBorder"},
+      {"🭼", "FloatBorder"},
+      {"▏", "FloatBorder"},
+}
+
+-- LSP settings (for overriding per client)
+local handlers =  {
+  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
+  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+}
 
 -- Telescope config
 require('telescope').setup({
@@ -165,12 +184,14 @@ lsp.tsserver.setup{
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 		on_attach()
-	end
+	end,
+	handlers = handlers
 }
 -- Gopls
 lsp.gopls.setup{
 	on_attach = on_attach,
-	capabilities = capabilities
+	capabilities = capabilities,
+	handlers = handlers
 }
 -- Pylsp
 lsp.pylsp.setup{
@@ -185,7 +206,8 @@ lsp.pylsp.setup{
 				}
 			}
 		}
-	}
+	},
+	handlers = handlers
 }
 
 -- Rust
