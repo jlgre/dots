@@ -46,6 +46,7 @@ cd_with_venv_check() {
 
 activate_venv() {
 	[ -d "./venv/" ] && [ -f "./venv/bin/activate" ] && source ./venv/bin/activate
+	return 0
 }
 
 export NVM_DIR="$HOME/.nvm"
@@ -61,5 +62,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         source "$BASE16_SHELL/profile_helper.sh"
         
-base16_tomorrow
+base16_gruvbox-dark-hard
 . "$HOME/.cargo/env"
