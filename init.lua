@@ -1,8 +1,9 @@
 -- Luke Green's NVIM config
--- Supported langs
+-- Well supported langs
 -- - Go
 -- - Javascript/Typescript
 -- - Python
+-- - Rust
 -- Things I want
 -- - Telescope to show recent files
 require('packer').startup(function()
@@ -17,9 +18,9 @@ require('packer').startup(function()
 	use 'hrsh7th/cmp-vsnip'
 	use 'hrsh7th/vim-vsnip'
 	use 'morhetz/gruvbox'
-	use 'altercation/vim-colors-solarized'
 	use 'euclidianAce/BetterLua.vim'
 	use 'tpope/vim-fugitive'
+	use 'tpope/vim-commentary'
 	use {
 		'nvim-telescope/telescope.nvim',
 		requires = { {'nvim-lua/plenary.nvim'} }
@@ -35,7 +36,6 @@ require('packer').startup(function()
 	use 'leafgarland/typescript-vim'
 	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
-	use 'NicholasDunham/chuck.nvim'
 end)
 
 vim.g.mapleader = ' '
@@ -50,8 +50,13 @@ vim.opt.hlsearch = false
 vim.opt.wrap = false
 
 -- Colorscheme
-vim.cmd('let base16colorspace=256')
-vim.cmd('colorscheme base16-tomorrow')
+local set_theme_path = "$HOME/.config/tinted-theming/set_theme.lua"
+local is_set_theme_file_readable = vim.fn.filereadable(vim.fn.expand(set_theme_path)) == 1 and true or false
+
+if is_set_theme_file_readable then
+  vim.cmd("let base16colorspace=256")
+  vim.cmd("source " .. set_theme_path)
+end
 
 -- Statusline
 require('lualine').setup({ options = { theme = 'base16' }})
