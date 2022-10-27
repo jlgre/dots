@@ -221,6 +221,12 @@ lsp.rust_analyzer.setup{
 	on_attach = on_attach
 }
 
+-- Ruby
+lsp.solargraph.setup{
+	capabilities = capabilities,
+	on_attach = on_attach
+}
+
 -- Global Binds
 -- Telescope
 vim.api.nvim_set_keymap('n', '<leader>ff', ':Telescope git_files<cr>', { noremap = true })

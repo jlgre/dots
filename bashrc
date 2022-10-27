@@ -64,3 +64,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
         
 base16_gruvbox-dark-hard
 . "$HOME/.cargo/env"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
