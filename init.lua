@@ -4,6 +4,7 @@
 -- - Javascript/Typescript
 -- - Python
 -- - Rust
+-- - Sql
 -- Things I want
 -- - Telescope to show recent files
 require('packer').startup(function()
@@ -36,6 +37,7 @@ require('packer').startup(function()
 	use 'leafgarland/typescript-vim'
 	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
+	use 'elixir-editors/vim-elixir'
 end)
 
 vim.g.mapleader = ' '
@@ -48,6 +50,7 @@ vim.opt.updatetime = 100
 vim.opt.tabstop = 4
 vim.opt.hlsearch = false
 vim.opt.wrap = false
+vim.opt.shell = '/bin/bash --login'
 
 -- Colorscheme
 local set_theme_path = "$HOME/.config/tinted-theming/set_theme.lua"
@@ -225,6 +228,11 @@ lsp.rust_analyzer.setup{
 lsp.solargraph.setup{
 	capabilities = capabilities,
 	on_attach = on_attach
+}
+
+-- Elixir
+lsp.elixirls.setup{
+	cmd = { vim.fn.expand("~/bin/elixir-ls/language_server.sh") }
 }
 
 -- Global Binds
