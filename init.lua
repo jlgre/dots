@@ -38,9 +38,15 @@ require('packer').startup(function()
 	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
 	use 'elixir-editors/vim-elixir'
+	use {
+		'guns/vim-sexp',
+		ft = { 'clojure' }
+	}
+	use 'Olical/conjure'
 end)
 
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 vim.opt.encoding='utf-8'
 
 vim.opt.number = true
