@@ -1,12 +1,6 @@
 # .bashrc
 source /usr/share/doc/git/contrib/completion/git-prompt.sh
 
-#if [ -n "$PS1" ] && [ -z "$TMUX" ]; then
-	# Adapted from https://unix.stackexchange.com/a/176885/347104
-	# Create session 'main' or attach to 'main' if already exists.
-# 	tmux new-session -A -s main
-#fi
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -62,7 +56,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         source "$BASE16_SHELL/profile_helper.sh"
 
-base16_atelier-dune
+base16_solarized-light
 . "$HOME/.cargo/env"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.

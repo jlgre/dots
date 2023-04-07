@@ -227,13 +227,15 @@ lsp.pylsp.setup{
 -- Rust
 lsp.rust_analyzer.setup{
 	capabilities = capabilities,
-	on_attach = on_attach
+	on_attach = on_attach,
+	handlers = handlers
 }
 
 -- Ruby
 lsp.solargraph.setup{
 	capabilities = capabilities,
-	on_attach = on_attach
+	on_attach = on_attach,
+	handlers = handlers
 }
 
 -- Elixir
