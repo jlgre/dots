@@ -1,5 +1,6 @@
 # .bashrc
-source /usr/share/doc/git/contrib/completion/git-prompt.sh
+# source /usr/share/doc/git/contrib/completion/git-prompt.sh
+source ~/.git-prompt.sh
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
