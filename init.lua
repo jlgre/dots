@@ -43,6 +43,13 @@ require('packer').startup(function()
 		ft = { 'clojure' }
 	}
 	use 'Olical/conjure'
+	use {
+		'nvim-treesitter/nvim-treesitter',
+		run = function()
+			local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+			ts_update()
+		end,
+	}
 end)
 
 vim.g.mapleader = ' '
@@ -181,6 +188,17 @@ require('telescope').setup({
 		layout_strategy = 'vertical'
 	}
 })
+
+-- Tree sitter config
+-- Right now just used for python
+require'nvim-treesitter.configs'.setup {
+	ensure_installed = { "python" },
+	sync_install = false,
+	auto_install = true,
+	highlight = {
+		enable = { "python" }
+	}
+}
 
 -- Go config
 vim.api.nvim_exec([[ let g:go_diagnostics_enabled = 0 ]], false)
