@@ -18,8 +18,6 @@ require('packer').startup(function()
 	use 'hrsh7th/cmp-path'
 	use 'hrsh7th/cmp-vsnip'
 	use 'hrsh7th/vim-vsnip'
-	use 'morhetz/gruvbox'
-	use 'euclidianAce/BetterLua.vim'
 	use 'tpope/vim-fugitive'
 	use 'tpope/vim-commentary'
 	use {
@@ -34,7 +32,6 @@ require('packer').startup(function()
 	}
 	use 'MaxMEllon/vim-jsx-pretty'
 	use 'tpope/vim-sleuth'
-	use 'leafgarland/typescript-vim'
 	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
 	use 'elixir-editors/vim-elixir'
@@ -192,11 +189,14 @@ require('telescope').setup({
 -- Tree sitter config
 -- Right now just used for python
 require'nvim-treesitter.configs'.setup {
-	ensure_installed = { "python" },
+	ensure_installed = { "python", "go", "lua", "tsx", "typescript" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
-		enable = { "python" }
+		enable = { "python", "go", "lua", "tsx", "typescript" }
+	},
+	indent = {
+		enable = true
 	}
 }
 
