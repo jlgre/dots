@@ -1,12 +1,8 @@
 -- Luke Green's NVIM config
--- Well supported langs
--- - Go
--- - Javascript/Typescript
--- - Python
--- - Rust
--- - Sql
--- Things I want
--- - Telescope to show recent files
+-- This heavily leverages three main packages to add support to all languages
+-- - nvim-lspconfig and everything that goes with it
+-- - nvim-cmp for completion via lsp
+-- - nvim-treesitter for syntax highlighting
 require('packer').startup(function()
 	use 'wbthomason/packer.nvim'
 	use 'fatih/vim-go'
@@ -30,16 +26,8 @@ require('packer').startup(function()
 		'nvim-lualine/lualine.nvim',
 		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
 	}
-	use 'MaxMEllon/vim-jsx-pretty'
 	use 'tpope/vim-sleuth'
-	use 'pangloss/vim-javascript'
 	use 'RRethy/nvim-base16'
-	use 'elixir-editors/vim-elixir'
-	use {
-		'guns/vim-sexp',
-		ft = { 'clojure' }
-	}
-	use 'Olical/conjure'
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function()
@@ -47,6 +35,7 @@ require('packer').startup(function()
 			ts_update()
 		end,
 	}
+	use 'vimwiki/vimwiki'
 end)
 
 vim.g.mapleader = ' '
@@ -70,6 +59,9 @@ if is_set_theme_file_readable then
   vim.cmd("let base16colorspace=256")
   vim.cmd("source " .. set_theme_path)
 end
+
+-- Vimwiki path
+vim.cmd("let g:vimwiki_list = [{'path': '~/life/', 'path_html': '~/public_html/'}]")
 
 -- Statusline
 require('lualine').setup({ options = { theme = 'base16' }})
