@@ -38,6 +38,7 @@ require('packer').startup(function()
 	}
 	use 'vimwiki/vimwiki'
 	use 'sbdchd/neoformat'
+	use 'Glench/Vim-Jinja2-Syntax'
 end)
 
 vim.g.mapleader = ' '
@@ -62,8 +63,16 @@ if current_theme_name and g.colors_name ~= 'base16-'..current_theme_name then
   cmd('colorscheme base16-'..current_theme_name)
 end
 
+-- Enable colorcolumn for text docs
+vim.cmd("autocmd FileType markdown set colorcolumn=80")
+vim.cmd("autocmd FileType asciidoc set colorcolumn=80")
+
 -- Vimwiki path
 vim.cmd("let g:vimwiki_list = [{'path': '~/life/', 'path_html': '~/public_html/'}]")
+
+-- Don't treat every md file as a wiki
+vim.cmd("let g:vimwiki_global_ext = 0")
+
 
 -- Statusline
 require('lualine').setup({ options = { theme = 'base16' }})
