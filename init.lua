@@ -28,6 +28,7 @@ require('packer').startup(function()
 	}
 	use 'tpope/vim-sleuth'
 	use 'RRethy/nvim-base16'
+	use 'tinted-theming/base16-vim'
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function()
@@ -36,6 +37,7 @@ require('packer').startup(function()
 		end,
 	}
 	use 'vimwiki/vimwiki'
+	use 'sbdchd/neoformat'
 end)
 
 vim.g.mapleader = ' '
@@ -49,15 +51,15 @@ vim.opt.updatetime = 100
 vim.opt.tabstop = 4
 vim.opt.hlsearch = false
 vim.opt.wrap = false
-vim.opt.shell = '/bin/bash --login'
 
 -- Colorscheme
-local set_theme_path = "$HOME/.config/tinted-theming/set_theme.lua"
-local is_set_theme_file_readable = vim.fn.filereadable(vim.fn.expand(set_theme_path)) == 1 and true or false
+local cmd = vim.cmd
+local g = vim.g
 
-if is_set_theme_file_readable then
-  vim.cmd("let base16colorspace=256")
-  vim.cmd("source " .. set_theme_path)
+local current_theme_name = os.getenv('BASE16_THEME')
+if current_theme_name and g.colors_name ~= 'base16-'..current_theme_name then
+  cmd('let base16colorspace=256')
+  cmd('colorscheme base16-'..current_theme_name)
 end
 
 -- Vimwiki path
@@ -192,6 +194,13 @@ require'nvim-treesitter.configs'.setup {
 	}
 }
 
+-- Auto formatting
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+	pattern = {"*.py"},
+	desc = "Format code",
+	command = "Neoformat"
+})
+
 -- Go config
 vim.api.nvim_exec([[ let g:go_diagnostics_enabled = 0 ]], false)
 vim.api.nvim_exec([[ let g:go_metalinter_enabled = [] ]], false)
@@ -217,22 +226,19 @@ lsp.gopls.setup{
 	capabilities = capabilities,
 	handlers = handlers
 }
--- Pylsp
-lsp.pylsp.setup{
+-- Python
+lsp.pyright.setup{
 	capabilities = capabilities,
 	on_attach = on_attach,
-	settings = {
-		pylsp = {
-			plugins = {
-				pycodestyle = {
-					ignore = {'W391'},
-					maxLineLength = 100
-				}
-			}
-		}
-	},
 	handlers = handlers
 }
+
+--- Autoformat
+vim.g.neoformat_python_autopep8 = {
+	exe = 'black',
+}
+
+vim.g.neoformat_enabled_python = {'black'}
 
 -- Rust
 lsp.rust_analyzer.setup{

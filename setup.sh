@@ -3,6 +3,9 @@
 [ -f ~/.bashrc ] && mv ~/.bashrc ~/.bashrc.bak
 ln -s "$(pwd)/bashrc" ~/.bashrc
 
+[ -f ~/.bash_profile ] && mv ~/.bash_profile ~/.bash_profile.bak
+ln -s "$(pwd)/bash_profile" ~/.bash_profile
+
 [ -f ~/.tmux.conf ] && mv ~/.tmux.conf ~/.tmux.conf.bak
 ln -s "$(pwd)/tmux.conf" ~/.tmux.conf
 

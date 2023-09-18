@@ -14,10 +14,6 @@ then
 fi
 export PATH
 
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:~/go/bin
-export PATH=$PATH:/usr/local/bin
-
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
@@ -34,6 +30,7 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 
 #PS1='[$?][\u@\h \w]$(__git_ps1)$ '
 PS1='[$?] \u:\w$(__git_ps1)$ '
+
 cd_with_venv_check() {
 	builtin cd ${1:+"$@"}
 	activate_venv
@@ -52,10 +49,6 @@ venvd() {
 	fi
 }
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 export EDITOR=nvim
 
 [ -f ~/.custom.sh ] && source ~/.custom.sh
@@ -65,8 +58,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         source "$BASE16_SHELL/profile_helper.sh"
 
-base16_material-darker
-. "$HOME/.cargo/env"
+[ -n "$PS1" ] && base16_solarized-light
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
