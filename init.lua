@@ -1,8 +1,9 @@
 -- Luke Green's NVIM config
--- This heavily leverages three main packages to add support to all languages
+-- This heavily leverages four main packages to add support to all languages
 -- - nvim-lspconfig and everything that goes with it
 -- - nvim-cmp for completion via lsp
 -- - nvim-treesitter for syntax highlighting
+-- - neoformat to format code automatically
 require('packer').startup(function()
 	use 'wbthomason/packer.nvim'
 	use 'fatih/vim-go'
@@ -27,8 +28,6 @@ require('packer').startup(function()
 		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
 	}
 	use 'tpope/vim-sleuth'
-	use 'RRethy/nvim-base16'
-	use 'tinted-theming/base16-vim'
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function()
@@ -39,6 +38,7 @@ require('packer').startup(function()
 	use 'vimwiki/vimwiki'
 	use 'sbdchd/neoformat'
 	use 'Glench/Vim-Jinja2-Syntax'
+	use 'tinted-theming/base16-vim'
 end)
 
 vim.g.mapleader = ' '
@@ -53,15 +53,11 @@ vim.opt.tabstop = 4
 vim.opt.hlsearch = false
 vim.opt.wrap = false
 
--- Colorscheme
 local cmd = vim.cmd
-local g = vim.g
 
-local current_theme_name = os.getenv('BASE16_THEME')
-if current_theme_name and g.colors_name ~= 'base16-'..current_theme_name then
-  cmd('let base16colorspace=256')
-  cmd('colorscheme base16-'..current_theme_name)
-end
+-- Colorscheme
+vim.g.base16_colorspace = 256
+if os.getenv("BASE16_THEME") then cmd([[ colorscheme base16-]] .. os.getenv("BASE16_THEME") ) end
 
 -- Enable colorcolumn for text docs
 vim.cmd("autocmd FileType markdown set colorcolumn=80")
@@ -75,7 +71,7 @@ vim.cmd("let g:vimwiki_global_ext = 0")
 
 
 -- Statusline
-require('lualine').setup({ options = { theme = 'base16' }})
+require('lualine').setup({ options = { theme = 'solarized_light' }})
 
 -- Lsp Init
 local lsp = require'lspconfig'
@@ -192,11 +188,11 @@ require('telescope').setup({
 -- Tree sitter config
 -- Right now just used for python
 require'nvim-treesitter.configs'.setup {
-	ensure_installed = { "python", "go", "lua", "tsx", "typescript" },
+	ensure_installed = { "python", "go", "lua", "tsx", "typescript", "bash" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
-		enable = { "python", "go", "lua", "tsx", "typescript" }
+		enable = { "python", "go", "lua", "tsx", "typescript", "bash" }
 	},
 	indent = {
 		enable = true
@@ -205,10 +201,15 @@ require'nvim-treesitter.configs'.setup {
 
 -- Auto formatting
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
-	pattern = {"*.py"},
+	pattern = {"*"},
 	desc = "Format code",
 	command = "Neoformat"
 })
+
+--- Enable languages
+vim.g.neoformat_enabled_python = {'black'}
+vim.g.neoformat_enabled_javascript = {'prettier'}
+vim.g.neoformat_enabled_typescript = {'prettier'}
 
 -- Go config
 vim.api.nvim_exec([[ let g:go_diagnostics_enabled = 0 ]], false)
@@ -241,14 +242,6 @@ lsp.pyright.setup{
 	on_attach = on_attach,
 	handlers = handlers
 }
-
---- Autoformat
-vim.g.neoformat_python_autopep8 = {
-	exe = 'black',
-}
-
-vim.g.neoformat_enabled_python = {'black'}
-
 -- Rust
 lsp.rust_analyzer.setup{
 	capabilities = capabilities,

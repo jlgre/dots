@@ -58,5 +58,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         source "$BASE16_SHELL/profile_helper.sh"
 
-[ -n "$PS1" ] && base16_solarized-light
+base16_solarized-light
 
