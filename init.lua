@@ -11,9 +11,7 @@ require('packer').startup(function()
 	use 'hrsh7th/nvim-cmp'
 	use 'hrsh7th/cmp-nvim-lsp'
 	use 'hrsh7th/cmp-buffer'
-	use 'hrsh7th/cmp-cmdline'
-	use 'hrsh7th/cmp-path'
-	use 'hrsh7th/cmp-vsnip'
+	use 'hrsh7th/cmp-cmdline' use 'hrsh7th/cmp-path' use 'hrsh7th/cmp-vsnip'
 	use 'hrsh7th/vim-vsnip'
 	use 'tpope/vim-fugitive'
 	use 'tpope/vim-commentary'
@@ -38,7 +36,7 @@ require('packer').startup(function()
 	use 'vimwiki/vimwiki'
 	use 'sbdchd/neoformat'
 	use 'Glench/Vim-Jinja2-Syntax'
-	use 'tinted-theming/base16-vim'
+	use "savq/melange-nvim"
 end)
 
 vim.g.mapleader = ' '
@@ -56,8 +54,33 @@ vim.opt.wrap = false
 local cmd = vim.cmd
 
 -- Colorscheme
-vim.g.base16_colorspace = 256
-if os.getenv("BASE16_THEME") then cmd([[ colorscheme base16-]] .. os.getenv("BASE16_THEME") ) end
+vim.opt.termguicolors = true
+
+function is_light_theme()
+	return string.sub(vim.fn.system({'tmux', 'show-environment', 'THEME'}), 1, 11) == "THEME=light"
+end
+
+function set_background()
+	if is_light_theme() then
+		vim.opt.background = 'light'
+	else
+		vim.opt.background = 'dark'
+	end
+	cmd.colorscheme 'melange'
+end
+
+function toggle_light_dark()
+	os.execute('tmux source-file ' .. (is_light_theme() and '~/.tmux_dark.conf' or '~/.tmux_light.conf'))
+	os.execute('tmux set-environment THEME ' .. (is_light_theme() and 'dark' or 'light'))
+	set_background()
+end
+
+set_background()
+
+-- Refresh the color when SIGUSR1 is sent
+vim.api.nvim_create_autocmd({"Signal"}, {
+	callback = set_background
+})
 
 -- Enable colorcolumn for text docs
 vim.cmd("autocmd FileType markdown set colorcolumn=80")
@@ -71,7 +94,7 @@ vim.cmd("let g:vimwiki_global_ext = 0")
 
 
 -- Statusline
-require('lualine').setup({ options = { theme = 'solarized_light' }})
+require('lualine').setup()
 
 -- Lsp Init
 local lsp = require'lspconfig'
@@ -159,6 +182,7 @@ local on_attach = function(client, bufnr)
 	local bufopts = { noremap=true, silent=true, buffer=bufnr }
 	vim.keymap.set('n', '<leader>i', vim.lsp.buf.hover, bufopts)
 	vim.keymap.set('n', '<leader>d', vim.lsp.buf.type_definition, bufopts)
+	vim.keymap.set('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', bufopts) 
 end
 
 local border = {
@@ -201,7 +225,7 @@ require'nvim-treesitter.configs'.setup {
 
 -- Auto formatting
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
-	pattern = {"*"},
+	pattern = {"*.js", "*.ts", "*.jsx", "*.tsx", "*.py"},
 	desc = "Format code",
 	command = "Neoformat"
 })
@@ -262,6 +286,8 @@ lsp.elixirls.setup{
 }
 
 -- Global Binds
+-- Color scheme
+vim.keymap.set('n', '<leader>o', toggle_light_dark, { noremap = true })
 -- Telescope
 vim.api.nvim_set_keymap('n', '<leader>ff', ':Telescope git_files<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>fs', ':Telescope live_grep<cr>', { noremap = true })

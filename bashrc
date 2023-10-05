@@ -1,6 +1,5 @@
 # .bashrc
-source /usr/share/doc/git/contrib/completion/git-prompt.sh
-# source ~/.git-prompt.sh
+source /usr/share/doc/git/contrib/completion/git-prompt.sh # source ~/.git-prompt.sh
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -13,9 +12,6 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
-
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
 
 # User specific aliases and functions
 
@@ -51,12 +47,16 @@ venvd() {
 
 export EDITOR=nvim
 
+if command -v tmux>/dev/null; then
+    [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && tmux new-session -A -s main
+
+    # check if we have been switched to light, else go dark
+    [[ ! $(tmux show-environment | grep THEME) =~ 'THEME=light' ]] && 
+    tmux set-environment THEME dark
+fi
+
+alias ol="tmux source-file ~/.tmux_light.conf; tmux set-environment THEME 'light' && killall -s SIGUSR1 nvim"
+alias od="tmux source-file ~/.tmux_dark.conf; tmux set-environment THEME 'dark' && killall -s SIGUSR1 nvim"
+
 [ -f ~/.custom.sh ] && source ~/.custom.sh
-
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        source "$BASE16_SHELL/profile_helper.sh"
-
-base16_solarized-light
-
+## Don't put anything below here
