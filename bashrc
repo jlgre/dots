@@ -45,6 +45,20 @@ venvd() {
 	fi
 }
 
+jqless() {
+	local jqfile=${1:--}
+	jq -C . ${jqfile} | less -R
+}
+
+jqvim() {
+	local jqfile=${1:--}
+	jq -M . ${jqfile} | nvim -M -c 'set filetype=json'
+}
+
+sum() {
+	paste -sd+ | bc
+}
+
 export EDITOR=nvim
 
 if command -v tmux>/dev/null; then

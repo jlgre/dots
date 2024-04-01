@@ -37,6 +37,7 @@ require('packer').startup(function()
 	use 'sbdchd/neoformat'
 	use 'Glench/Vim-Jinja2-Syntax'
 	use "savq/melange-nvim"
+	use "diepm/vim-rest-console"
 end)
 
 vim.g.mapleader = ' '
@@ -85,6 +86,20 @@ vim.api.nvim_create_autocmd({"Signal"}, {
 -- Enable colorcolumn for text docs
 vim.cmd("autocmd FileType markdown set colorcolumn=80")
 vim.cmd("autocmd FileType asciidoc set colorcolumn=80")
+
+-- Http client
+vim.g.vrc_curl_opts = {
+	["-k"] = "",
+	["-i"] = "",
+	["-s"] = "",
+}
+
+vim.g.vrc_show_command = true
+
+vim.g.vrc_auto_format_response_patterns = {
+      json = 'jq',
+      xml = 'tidy -xml -i -',
+}
 
 -- Vimwiki path
 vim.cmd("let g:vimwiki_list = [{'path': '~/life/', 'path_html': '~/public_html/'}]")
@@ -212,7 +227,7 @@ require('telescope').setup({
 -- Tree sitter config
 -- Right now just used for python
 require'nvim-treesitter.configs'.setup {
-	ensure_installed = { "python", "go", "lua", "tsx", "typescript", "bash" },
+	ensure_installed = { "python", "go", "lua", "tsx", "typescript", "bash", "http", "json" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
@@ -225,7 +240,7 @@ require'nvim-treesitter.configs'.setup {
 
 -- Auto formatting
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
-	pattern = {"*.js", "*.ts", "*.jsx", "*.tsx", "*.py"},
+	pattern = {"*.js", "*.ts", "*.jsx", "*.tsx", "*.py", "*.md", "*.sh"},
 	desc = "Format code",
 	command = "Neoformat"
 })
@@ -234,6 +249,9 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
 vim.g.neoformat_enabled_python = {'black'}
 vim.g.neoformat_enabled_javascript = {'prettier'}
 vim.g.neoformat_enabled_typescript = {'prettier'}
+vim.g.neoformat_enabled_markdown = {'prettier'}
+vim.g.neoformat_enabled_shell = {'shfmt'}
+vim.g.shfmt_opt = '-ci'
 
 -- Go config
 vim.api.nvim_exec([[ let g:go_diagnostics_enabled = 0 ]], false)
